@@ -1,0 +1,407 @@
+Afia Otieku-Boadu
+55002028
+Cohort A
+
+
+MariaDB [(none)]> create database officemanagement;
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [(none)]> show databases;
++-----------------------+
+| Database              |
++-----------------------+
+| company               |
+| hospitalitymanagement |
+| information_schema    |
+| movieco               |
+| mysql                 |
+| officemanagement      |
+| performance_schema    |
+| sys                   |
+| test                  |
++-----------------------+
+9 rows in set (0.070 sec)
+
+MariaDB [(none)]> use officemanagement;
+Database changed
+
+MariaDB [officemanagement]> create table employee(empNo int not null, fName varchar(50) not null, lname varchar(50), address varchar(100), dob date, sex char, position varchar(50), deptNo int, primary key (empNo));
+Query OK, 0 rows affected (0.050 sec)
+
+MariaDB [officemanagement]> create table department(deptNo int not null, deptName varchar(50) not null, mgrEmpNo int not null, foreign key(mgrEmpNo) references employee(empNo), primary key (deptNo));
+Query OK, 0 rows affected (0.021 sec)
+
+MariaDB [officemanagement]> alter table employee add foreign key(deptNo) references department(deptNo);
+Query OK, 0 rows affected (0.043 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> create table project(projNo int not null, projName varchar(100), deptNo int not null, foreign key(deptNo) references department(deptNo), primary key(projNo));
+Query OK, 0 rows affected (0.021 sec)
+
+MariaDB [officemanagement]> create table workson(empNo int not null, projNo int not null, dateWorked date, hoursWorked decimal, foreign key(empNo) references employee(empNo), foreign key(projNo) references project(projNo), primary key (empNo, projNo, dateWorked));
+Query OK, 0 rows affected (0.022 sec)
+
+MariaDB [officemanagement]> insert into department values
+    -> (1,'Human Resource',NULL),
+    -> (2,'IT',NULL),
+    -> (3,'Finance',NULL),
+    -> (4,'Marketing',NULL),
+    -> (5,'Operations',NULL);
+Query OK, 5 rows affected (0.014 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> insert into employee values
+    -> (101,'John','Mensah','Accra','1985-04-12','M','Manager',1),
+    -> (102,'Sarah','Owusu','Kumasi','1990-07-21','F','Developer',2),
+    -> (103,'Michael','Asante','Takoradi','1988-11-15','M','Analyst',3),
+    -> (104,'Linda','Boateng','Cape Coast','1992-03-09','F','Developer',4),
+    -> (105,'Daniel','Adjei','Tamale','1987-09-30','M','Engineer',5);
+Query OK, 5 rows affected (0.006 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> update department set mgrEmpNo=101 where deptNo=1;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [officemanagement]> update department set mgrEmpNo=102 where deptNo=2;
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [officemanagement]> update department set mgrEmpNo=103 where deptNo=3;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [officemanagement]> update department set mgrEmpNo=104 where deptNo=4;
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [officemanagement]> update department set mgrEmpNo=105 where deptNo=5;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [officemanagement]> insert into project values
+    -> (201,'Payroll System',2),
+    -> (202,'Customer Portal',2),
+    -> (203,'Budget Planning',3),
+    -> (204,'Recruitment System',1),
+    -> (205,'Sales Tracking',4);
+Query OK, 5 rows affected (0.012 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> insert into workson values
+    -> (101,204,'2024-01-10',6),
+    -> (102,201,'2024-01-10',8),
+    -> (103,203,'2024-01-11',5),
+    -> (104,205,'2024-01-12',7),
+    -> (105,202,'2024-01-13',4);
+Query OK, 5 rows affected (0.012 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> select * from employee;
++-------+---------+---------+------------+------------+------+-----------+--------+
+| empNo | fName   | lname   | address    | dob        | sex  | position  | deptNo |
++-------+---------+---------+------------+------------+------+-----------+--------+
+|   101 | John    | Mensah  | Accra      | 1985-04-12 | M    | Manager   |      1 |
+|   102 | Sarah   | Owusu   | Kumasi     | 1990-07-21 | F    | Developer |      2 |
+|   103 | Michael | Asante  | Takoradi   | 1988-11-15 | M    | Analyst   |      3 |
+|   104 | Linda   | Boateng | Cape Coast | 1992-03-09 | F    | Developer |      4 |
+|   105 | Daniel  | Adjei   | Tamale     | 1987-09-30 | M    | Engineer  |      5 |
++-------+---------+---------+------------+------------+------+-----------+--------+
+5 rows in set (0.004 sec)
+
+MariaDB [officemanagement]> select * from department;
++--------+----------------+----------+
+| deptNo | deptName       | mgrEmpNo |
++--------+----------------+----------+
+|      1 | Human Resource |      101 |
+|      2 | IT             |      102 |
+|      3 | Finance        |      103 |
+|      4 | Marketing      |      104 |
+|      5 | Operations     |      105 |
++--------+----------------+----------+
+5 rows in set (0.001 sec)
+
+MariaDB [officemanagement]> select * from project;
++--------+--------------------+--------+
+| projNo | projName           | deptNo |
++--------+--------------------+--------+
+|    201 | Payroll System     |      2 |
+|    202 | Customer Portal    |      2 |
+|    203 | Budget Planning    |      3 |
+|    204 | Recruitment System |      1 |
+|    205 | Sales Tracking     |      4 |
++--------+--------------------+--------+
+5 rows in set (0.001 sec)
+
+MariaDB [officemanagement]> select * from workson;
++-------+--------+------------+-------------+
+| empNo | projNo | dateWorked | hoursWorked |
++-------+--------+------------+-------------+
+|   101 |    204 | 2024-01-10 |           6 |
+|   102 |    201 | 2024-01-10 |           8 |
+|   103 |    203 | 2024-01-11 |           5 |
+|   104 |    205 | 2024-01-12 |           7 |
+|   105 |    202 | 2024-01-13 |           4 |
++-------+--------+------------+-------------+
+5 rows in set (0.001 sec)
+
+MariaDB [officemanagement]> delimiter //
+MariaDB [officemanagement]> create trigger sex_trigger
+    -> before insert on employee
+    -> for each row
+    -> begin
+    -> if new.sex not in ('F','M')
+    -> then
+    -> signal sqlstate '45000'
+    -> set message_text = 'Invalid sex entered';
+    -> end if;
+    -> end//
+Query OK, 0 rows affected (0.025 sec)
+
+MariaDB [officemanagement]> create trigger position_trigger
+    -> before insert on employee
+    -> for each row
+    -> begin
+    -> if new.position not in ('Manager', 'Team Leader', 'Analyst', 'Software Developer')
+    -> then
+    -> signal sqlstate '45000'
+    -> set message_text = 'Invalid position entered';
+    -> end if;
+    -> end//
+Query OK, 0 rows affected (0.099 sec)
+
+MariaDB [officemanagement]> describe workson;
+    -> //
++-------------+---------------+------+-----+---------+-------+
+| Field       | Type          | Null | Key | Default | Extra |
++-------------+---------------+------+-----+---------+-------+
+| empNo       | int(11)       | NO   | PRI | NULL    |       |
+| projNo      | int(11)       | NO   | PRI | NULL    |       |
+| dateWorked  | date          | NO   | PRI | NULL    |       |
+| hoursWorked | decimal(10,0) | YES  |     | NULL    |       |
++-------------+---------------+------+-----+---------+-------+
+4 rows in set (0.041 sec)
+
+
+MariaDB [officemanagement]> create trigger hours_trigger
+    -> before insert on workson
+    -> for each row
+    -> begin
+    -> if new.hoursWorked not between 0 and 40
+    -> then
+    -> signal sqlstate '45000'
+    -> set message_text = 'Hours not within range';
+    -> end if;
+    -> end//
+Query OK, 0 rows affected (0.022 sec)
+
+MariaDB [officemanagement]> alter table workson modify hoursWorked int;
+    -> //
+Query OK, 5 rows affected (0.090 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> delimiter ;
+
+MariaDB [officemanagement]> describe workson;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| empNo       | int(11) | NO   | PRI | NULL    |       |
+| projNo      | int(11) | NO   | PRI | NULL    |       |
+| dateWorked  | date    | NO   | PRI | NULL    |       |
+| hoursWorked | int(11) | YES  |     | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+4 rows in set (0.215 sec)
+
+
+MariaDB [officemanagement]> select * from project;
++--------+--------------------+--------+
+| projNo | projName           | deptNo |
++--------+--------------------+--------+
+|    201 | Payroll System     |      2 |
+|    202 | Customer Portal    |      2 |
+|    203 | Budget Planning    |      3 |
+|    204 | Recruitment System |      1 |
+|    205 | Sales Tracking     |      4 |
++--------+--------------------+--------+
+5 rows in set (0.077 sec)
+
+MariaDB [officemanagement]> select * from employee;
++-------+---------+---------+------------+------------+------+-----------+--------+
+| empNo | fName   | lname   | address    | dob        | sex  | position  | deptNo |
++-------+---------+---------+------------+------------+------+-----------+--------+
+|   101 | John    | Mensah  | Accra      | 1985-04-12 | M    | Manager   |      1 |
+|   102 | Sarah   | Owusu   | Kumasi     | 1990-07-21 | F    | Developer |      2 |
+|   103 | Michael | Asante  | Takoradi   | 1988-11-15 | M    | Analyst   |      3 |
+|   104 | Linda   | Boateng | Cape Coast | 1992-03-09 | F    | Developer |      4 |
+|   105 | Daniel  | Adjei   | Tamale     | 1987-09-30 | M    | Engineer  |      5 |
++-------+---------+---------+------------+------------+------+-----------+--------+
+5 rows in set (0.076 sec)
+
+MariaDB [officemanagement]> insert into employee values
+    -> (106,'Grace','Agyeman','Sunyani','1991-06-18','F','Analyst',3),
+    -> (107,'Kwame','Addo','Ho','1986-02-25','M','Team Leader',5),
+    -> (108,'Patricia','Darko','Koforidua','1993-10-14','F','Manager',1),
+    -> (109,'Emmanuel','Ofori','Bolgatanga','1984-08-05','M','Software Developer',2),
+    -> (110,'Felicia','Ansah','Tema','1995-12-20','F','Analyst',4);
+Query OK, 5 rows affected (0.048 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> insert into project values
+    -> (206,'Inventory System',5),
+    -> (207,'Mobile Banking App',2),
+    -> (208,'Employee Training',1),
+    -> (209,'Financial Audit',3),
+    -> (210,'Market Research',4);
+Query OK, 5 rows affected (0.003 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> insert into workson values
+    -> (106,209,'2024-01-14',24),
+    -> (107,206,'2024-01-15',35),
+    -> (108,208,'2024-01-16',18),
+    -> (109,207,'2024-01-17',40),
+    -> (110,210,'2024-01-18',22);
+Query OK, 5 rows affected (0.011 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [officemanagement]> select * from employee;
++-------+----------+---------+------------+------------+------+--------------------+--------+
+| empNo | fName    | lname   | address    | dob        | sex  | position           | deptNo |
++-------+----------+---------+------------+------------+------+--------------------+--------+
+|   101 | John     | Mensah  | Accra      | 1985-04-12 | M    | Manager            |      1 |
+|   102 | Sarah    | Owusu   | Kumasi     | 1990-07-21 | F    | Developer          |      2 |
+|   103 | Michael  | Asante  | Takoradi   | 1988-11-15 | M    | Analyst            |      3 |
+|   104 | Linda    | Boateng | Cape Coast | 1992-03-09 | F    | Developer          |      4 |
+|   105 | Daniel   | Adjei   | Tamale     | 1987-09-30 | M    | Engineer           |      5 |
+|   106 | Grace    | Agyeman | Sunyani    | 1991-06-18 | F    | Analyst            |      3 |
+|   107 | Kwame    | Addo    | Ho         | 1986-02-25 | M    | Team Leader        |      5 |
+|   108 | Patricia | Darko   | Koforidua  | 1993-10-14 | F    | Manager            |      1 |
+|   109 | Emmanuel | Ofori   | Bolgatanga | 1984-08-05 | M    | Software Developer |      2 |
+|   110 | Felicia  | Ansah   | Tema       | 1995-12-20 | F    | Analyst            |      4 |
++-------+----------+---------+------------+------------+------+--------------------+--------+
+10 rows in set (0.008 sec)
+
+MariaDB [officemanagement]> create view FemaleProjectManagers (eID, firstName, lastName, projectName, projectID) as select e.empNo, e.fName, e.lName, p.projName, p.projNo from employee e, project p, department d where p.deptNo = d.deptNo and d.deptNo = e.deptNo and e.sex = 'F' group by p.projNo;
+Query OK, 0 rows affected (0.014 sec)
+
+MariaDB [officemanagement]> select * from FemaleProjectManagers;
++-----+-----------+----------+--------------------+-----------+
+| eID | firstName | lastName | projectName        | projectID |
++-----+-----------+----------+--------------------+-----------+
+| 102 | Sarah     | Owusu    | Payroll System     |       201 |
+| 102 | Sarah     | Owusu    | Customer Portal    |       202 |
+| 106 | Grace     | Agyeman  | Budget Planning    |       203 |
+| 108 | Patricia  | Darko    | Recruitment System |       204 |
+| 104 | Linda     | Boateng  | Sales Tracking     |       205 |
+| 102 | Sarah     | Owusu    | Mobile Banking App |       207 |
+| 108 | Patricia  | Darko    | Employee Training  |       208 |
+| 106 | Grace     | Agyeman  | Financial Audit    |       209 |
+| 104 | Linda     | Boateng  | Market Research    |       210 |
++-----+-----------+----------+--------------------+-----------+
+9 rows in set (0.005 sec)
+
+
+MariaDB [officemanagement]> create view ProjectManagers (eID, firstName, lastName, projectName, hourWorked) as select e.empNo, e.fName, e.lName, p.projName, w.hoursWorked from employee e, project p, department d, workson w where p.deptNo = d.deptNo and d.deptNo = e.deptNo and w.projNo = p.projNo;
+Query OK, 0 rows affected (0.019 sec)
+
+MariaDB [officemanagement]> select * from ProjectManagers;
++-----+-----------+----------+--------------------+------------+
+| eID | firstName | lastName | projectName        | hourWorked |
++-----+-----------+----------+--------------------+------------+
+| 101 | John      | Mensah   | Recruitment System |          6 |
+| 101 | John      | Mensah   | Employee Training  |         18 |
+| 108 | Patricia  | Darko    | Recruitment System |          6 |
+| 108 | Patricia  | Darko    | Employee Training  |         18 |
+| 102 | Sarah     | Owusu    | Payroll System     |          8 |
+| 102 | Sarah     | Owusu    | Customer Portal    |          4 |
+| 102 | Sarah     | Owusu    | Mobile Banking App |         40 |
+| 109 | Emmanuel  | Ofori    | Payroll System     |          8 |
+| 109 | Emmanuel  | Ofori    | Customer Portal    |          4 |
+| 109 | Emmanuel  | Ofori    | Mobile Banking App |         40 |
+| 103 | Michael   | Asante   | Budget Planning    |          5 |
+| 103 | Michael   | Asante   | Financial Audit    |         24 |
+| 106 | Grace     | Agyeman  | Budget Planning    |          5 |
+| 106 | Grace     | Agyeman  | Financial Audit    |         24 |
+| 104 | Linda     | Boateng  | Sales Tracking     |          7 |
+| 104 | Linda     | Boateng  | Market Research    |         22 |
+| 110 | Felicia   | Ansah    | Sales Tracking     |          7 |
+| 110 | Felicia   | Ansah    | Market Research    |         22 |
+| 105 | Daniel    | Adjei    | Inventory System   |         35 |
+| 107 | Kwame     | Addo     | Inventory System   |         35 |
++-----+-----------+----------+--------------------+------------+
+20 rows in set (0.014 sec)
+
+MariaDB [officemanagement]> create view EmpProject(empNo, projNo, totalHours) as select w.empNo, w.projNo, sum(hoursWorked) from employee e, project p, workson w where e.empNo = w.empNo and p.projNo = w.projNo group by w.empNo, w.projNo;
+Query OK, 0 rows affected (0.018 sec)
+
+MariaDB [officemanagement]> select * from empProject;
++-------+--------+------------+
+| empNo | projNo | totalHours |
++-------+--------+------------+
+|   101 |    204 |          6 |
+|   102 |    201 |          8 |
+|   103 |    203 |          5 |
+|   104 |    205 |          7 |
+|   105 |    202 |          4 |
+|   106 |    209 |         24 |
+|   107 |    206 |         35 |
+|   108 |    208 |         18 |
+|   109 |    207 |         40 |
+|   110 |    210 |         22 |
++-------+--------+------------+
+10 rows in set (0.016 sec)
+
+MariaDB [officemanagement]> select projNo from empProject;
++--------+
+| projNo |
++--------+
+|    204 |
+|    201 |
+|    203 |
+|    205 |
+|    202 |
+|    209 |
+|    206 |
+|    208 |
+|    207 |
+|    210 |
++--------+
+10 rows in set (0.010 sec)
+
+MariaDB [officemanagement]> select projNo from empProject where projNo = 'SCCS';
+Empty set, 1 warning (0.015 sec)
+
+MariaDB [officemanagement]> select count(projNo) from empProject where empNo = 'E1';
++---------------+
+| count(projNo) |
++---------------+
+|             0 |
++---------------+
+1 row in set (0.008 sec)
+
+MariaDB [officemanagement]> select empNo, totalHours from empProject group by empNo;
++-------+------------+
+| empNo | totalHours |
++-------+------------+
+|   101 |          6 |
+|   102 |          8 |
+|   103 |          5 |
+|   104 |          7 |
+|   105 |          4 |
+|   106 |         24 |
+|   107 |         35 |
+|   108 |         18 |
+|   109 |         40 |
+|   110 |         22 |
++-------+------------+
+10 rows in set (0.010 sec)
+
+
+General Question
+In maintaining the ExpensiveParts as a materialised view, it may have to be updated anytime a change is made to the Parts under certain conditions:
+1. When a new value is inserted into Part, we must first check if its price is greater than 1000. If it is, we insert it into the view if it is not already in the view.
+2. When a value in Part is deleted, we must first check if it satisfies the condition of the price being greater than 1000. If it satisfies the condition, we must check if there isn't any other price of that part that also satisfies that condition. If there aren't any other prices of that part that satisfy the condition then we delete it from the view too.
+3. When updating a part, we check if its new price has a value that satisfies the condition. If it does, we insert it into the view if it is not already in the view. However if the part being updated is a decrement that fails to satisfy the condition, then we check Part to see if there are any other prices for that part that satisfy the condition. If there isn't any, we delete that part from the view.
+
+In maintaining the view without accessing the base table, if a part being inserted has a price value that is greater than 1000 condition then we can just insert it into the view directly without having to access the base table first. This is the same case if a price is updated to a value that satisfies the condition.
